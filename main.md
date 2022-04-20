@@ -23,3 +23,5 @@ https://www.cs.umd.edu/class/spring2020/cmsc754/Lects/lect12-delaun-prop.pdf
 4. Libraries in matlab that do what we want 
 https://www.mathworks.com/help/matlab/ref/voronoi.html
 https://www.mathworks.com/help/matlab/ref/delaunaytriangulation.html
+
+5. Youtube explaining everything: https://www.youtube.com/watch?v=ysLCuqcyJZA
