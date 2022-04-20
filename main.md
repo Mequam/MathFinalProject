@@ -25,3 +25,7 @@ https://www.mathworks.com/help/matlab/ref/voronoi.html
 https://www.mathworks.com/help/matlab/ref/delaunaytriangulation.html
 
 5. Youtube explaining everything: https://www.youtube.com/watch?v=ysLCuqcyJZA
+
+6. GitHub Repositories useful to make our code
+https://github.com/HakanSeven12/Delaunator-Python
+https://github.com/jmespadero/pyDelaunay2D/blob/master/delaunay2D.py
