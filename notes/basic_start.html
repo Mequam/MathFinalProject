@@ -1,0 +1,1707 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+
+  <title>Delaunay Triangulation</title>
+  <meta name="HandheldFriendly" content="True" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  
+  <link rel="stylesheet" type="text/css" href="/assets/built/screen.css?v=f19783a367" /> 
+  <!-- for progress in navigation bar -->
+  <link rel="stylesheet" type="text/css" href="/assets/built/lightbox.css?v=f19783a367" />
+  <!-- for syntax highlight -->
+  <link rel="stylesheet" type="text/css" href="/assets/built/prism.css?v=f19783a367" />
+  <!-- merge2.css -> complexity.css + post_page.css -->
+  <link rel="stylesheet" type="text/css" href="/assets/built/merge2.css?v=f19783a367" />
+
+  <!-- table of contents disabled -->
+  <!--
+  <link rel="stylesheet" type="text/css" href="/assets/css/head_tab.css?v=f19783a367" />
+  <link rel="stylesheet" type="text/css" href="/assets/css/tab.css?v=f19783a367" />
+  -->
+  <!-- course page is not activated -->
+  <!--
+  <link rel="stylesheet" type="text/css" href="/assets/css/course_page.css?v=f19783a367" />
+  -->
+  <link rel="stylesheet" type="text/css" href="/assets/css/search_page.css?v=f19783a367" />
+  <!--
+  <link rel="stylesheet" type="text/css" href="/assets/css/navbar.css?v=f19783a367" /> -->
+  <style>
+    a {
+      text-decoration: none !important;
+    }
+
+    #time {
+      text-align: center;
+      font-weight: bold;
+    }
+
+    #scrollBtn {
+      display: none;
+      position: fixed;
+      bottom: 90px;
+      right: 36px;
+      z-index: 999;
+      border: none;
+      outline: none;
+      background-color: #351ed478;
+      color: white;
+      cursor: pointer;
+      padding: 15px;
+      border-radius: 50px;
+      width: 45px;
+    }
+
+    #scrollBtn:hover {
+      background-color: #351ed4;
+    }
+
+    @media (max-width: 480px) {
+      #scrollBtn {
+        right: 18px;
+        bottom: 80px;
+        transform: scale(0.9);
+      }
+    }
+  </style>
+
+  <meta name="description" content="In this article, we discuss Delaunay Triangulation, its relation to Voronoi diagrams and algorithms to compute Delaunay Triangulation. This is an important topic in Computational Geometry." />
+    <link rel="shortcut icon" href="/favicon.png" type="image/png" />
+    <link rel="canonical" href="https://iq.opengenus.org/delaunay-triangulation/" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+    <link rel="amphtml" href="https://iq.opengenus.org/delaunay-triangulation/amp/" />
+    
+    <meta property="og:site_name" content="OpenGenus IQ: Computing Expertise &amp; Legacy" />
+    <meta property="og:type" content="article" />
+    <meta property="og:title" content="Delaunay Triangulation" />
+    <meta property="og:description" content="In this article, we discuss Delaunay Triangulation, its relation to Voronoi diagrams and algorithms to compute Delaunay Triangulation. This is an important topic in Computational Geometry." />
+    <meta property="og:url" content="https://iq.opengenus.org/delaunay-triangulation/" />
+    <meta property="article:published_time" content="2021-12-05T10:53:30.000Z" />
+    <meta property="article:modified_time" content="2021-12-27T09:04:07.000Z" />
+    <meta property="article:tag" content="Algorithms" />
+    <meta property="article:tag" content="computational geometry" />
+    
+    <meta property="article:publisher" content="https://www.facebook.com/opengenus" />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content="Delaunay Triangulation" />
+    <meta name="twitter:description" content="In this article, we discuss Delaunay Triangulation, its relation to Voronoi diagrams and algorithms to compute Delaunay Triangulation. This is an important topic in Computational Geometry." />
+    <meta name="twitter:url" content="https://iq.opengenus.org/delaunay-triangulation/" />
+    <meta name="twitter:label1" content="Written by" />
+    <meta name="twitter:data1" content="Erick Lumunge" />
+    <meta name="twitter:label2" content="Filed under" />
+    <meta name="twitter:data2" content="Algorithms, computational geometry" />
+    <meta name="twitter:site" content="@OpenGenus" />
+    
+    <script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "publisher": {
+        "@type": "Organization",
+        "name": "OpenGenus IQ: Computing Expertise &amp; Legacy",
+        "logo": "https://iq.opengenus.org/content/images/2018/02/ll.jpeg"
+    },
+    "author": {
+        "@type": "Person",
+        "name": "Erick Lumunge",
+        "image": {
+            "@type": "ImageObject",
+            "url": "https://iq.opengenus.org/content/images/2021/11/erick.jpg",
+            "width": 240,
+            "height": 240
+        },
+        "url": "https://iq.opengenus.org/author/erick/",
+        "sameAs": [
+            "https://www.linkedin.com/in/lumunge/"
+        ]
+    },
+    "headline": "Delaunay Triangulation",
+    "url": "https://iq.opengenus.org/delaunay-triangulation/",
+    "datePublished": "2021-12-05T10:53:30.000Z",
+    "dateModified": "2021-12-27T09:04:07.000Z",
+    "keywords": "Algorithms, computational geometry",
+    "description": "In this article, we discuss Delaunay Triangulation, its relation to Voronoi diagrams and algorithms to compute Delaunay Triangulation. This is an important topic in Computational Geometry.",
+    "mainEntityOfPage": {
+        "@type": "WebPage",
+        "@id": "https://iq.opengenus.org/"
+    }
+}
+    </script>
+
+    <script src="/public/ghost-sdk.min.js?v=f19783a367"></script>
+<script>
+ghost.init({
+	clientId: "ghost-frontend",
+	clientSecret: "06875a67cb74"
+});
+</script>
+    <meta name="generator" content="Ghost 1.25" />
+    <link rel="alternate" type="application/rss+xml" title="OpenGenus IQ: Computing Expertise &amp; Legacy" href="https://iq.opengenus.org/rss/" />
+    <script data-ad-client="ca-pub-6329206778297580" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
+
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-6329206778297580" crossorigin="anonymous"></script>
+
+<script type="application/javascript" src="https://sdki.truepush.com/sdk/v2.0.2/app.js" async></script>
+<script>
+    var truepush = window.truepush || [];
+
+    truepush.push(function(){
+        truepush.Init({
+            id: "5eeb87cefb2b695cf40c7968"
+        },function(error){
+            if(error) console.error(error);
+        })
+    })
+</script>
+
+</head>
+<div id="nav_toggle" class="navbar_collapse navigation_page">
+  <div id="navbar_close">&times</div>
+  <a href="http://iq.opengenus.org">Home</a>
+  <a href="http://discourse.opengenus.org">Discussions</a>
+  <a href="http://iq.opengenus.org/guide-to-writing-a-note-at-opengenus-iq/">Write at Opengenus IQ</a>
+</div>
+
+<body class="post-template tag-algorithm tag-computational-geometry">
+
+  <div id="search_page" class="search_page search_page_hide">
+    <div class="search_page_close search_toggle">&times</div>
+    <div class="search_page_body">
+      <div id="site-search" style="display:none;" class="search_form">
+        <input class="typeahead search_form_input" type="text" placeholder="Search" />
+      </div>
+    </div>
+  </div>
+  <div class="site-wrapper">
+
+    
+
+<header class="site-header outer">
+  <div class="inner">
+    <nav class="navbar">
+  <div class="burger_menu">
+    <label for="burgertoggle" >&#9776;</label>
+    <input type="checkbox" id="burgertoggle"/>
+
+  </div>
+
+
+
+
+ <div class="navbar-left">
+            <ul class="nav" role="menu">
+    <li class="nav-random" role="menuitem"><a href="https://iq.opengenus.org/random/">RANDOM</a></li>
+    <li class="nav-join-our-internship-" role="menuitem"><a href="https://discourse.opengenus.org/t/internship-guidelines-at-opengenus/2335/">Join our Internship 🎓</a></li>
+    <li class="nav-100-graph-algorithms" role="menuitem"><a href="https://iq.opengenus.org/list-of-graph-algorithms/">100+ Graph Algorithms</a></li>
+    <li class="nav-100-dp-problems" role="menuitem"><a href="https://iq.opengenus.org/list-of-dynamic-programming-problems/">100+ DP Problems</a></li>
+    <li class="nav-50-linked-list-problems" role="menuitem"><a href="https://iq.opengenus.org/list-of-linked-list-problems/">50+ Linked List Problems</a></li>
+    <li class="nav-50-array-problems" role="menuitem"><a href="https://iq.opengenus.org/list-of-array-problems/">50+ Array Problems</a></li>
+    <li class="nav-one-liner" role="menuitem"><a href="https://iq.opengenus.org/one/">One Liner</a></li>
+    <li class="nav-50-binary-tree-problems" role="menuitem"><a href="https://iq.opengenus.org/list-of-binary-tree-problems/">50+ Binary Tree problems</a></li>
+    <li class="nav-7daysofcode" role="menuitem"><a href="https://www.amazon.com/days-Dynamic-Programming-7daysOfAlgo-Book-ebook/dp/B08GKXDWQW/">#7daysOfCode</a></li>
+    <li class="nav-linux-" role="menuitem"><a href="https://www.amazon.com/dp/B08FCYKGZY/">Linux 💽</a></li>
+    <li class="nav--data-structures" role="menuitem"><a href="https://www.amazon.com/dp/B08F2TDC7R/">🔊 Data Structures</a></li>
+    <li class="nav-graph-algorithms" role="menuitem"><a href="https://www.amazon.com/dp/B089SB5YCX">Graph Algorithms</a></li>
+    <li class="nav-dynamic-programming-" role="menuitem"><a href="https://www.amazon.com/gp/product/B087SV4WYJ/">Dynamic Programming 💑</a></li>
+    <li class="nav-home" role="menuitem"><a href="https://iq.opengenus.org/">Home</a></li>
+</ul>
+
+
+    </div>
+
+    <div class="navbar-right">
+      <!--  <div class="social-links"> -->
+          <a class="search_button">
+            <i class="fa fa-search search_toggle" style="cursor:pointer;"></i>
+          </a>
+        <!--    
+                <a class="social-link social-link-fb" href="https://www.facebook.com/opengenus" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+</a>
+                <a class="social-link social-link-tw" href="https://twitter.com/OpenGenus" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+</a>
+        </div>
+    <      -->
+            <a class="rss-button" href="https://feedly.com/i/subscription/feed/https://iq.opengenus.org/rss/" target="_blank" rel="noopener"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56zm0 5.66v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+</a>
+      <!--   -->
+    </div>
+
+</nav>
+  </div>
+</header>
+
+<style>
+.w3-modal {
+    padding-top: 100px;
+    position: fixed;
+    display: none;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+.w3-modal-content {
+    margin: auto;
+    background-color: #fff;
+    position: relative;
+    width: 80%;
+}
+.w3-container{
+    padding: 0.01em 16px;
+}
+.w3-button {
+    position: absolute;
+    right: 0;
+    padding-right: 2.5%;
+    top: 0;
+    background: rgb(255, 255, 255);
+    padding-top: 2.5%;
+}
+
+@media screen and (min-width: 600px) {
+  .w3-modal-content {
+       width: 70%;
+}
+
+@media screen and (min-width: 800px) {
+  .w3-modal-content {
+       width: 60%;
+}
+}
+
+.gssb_c .gsc-completion-container{
+  position: fixed;
+  width: fit-content !important;
+}
+</style>
+
+<script async src="https://cse.google.com/cse.js?cx=a08efacafd37fe86c"></script>
+
+<div id="id01" class="w3-modal" style="z-index: 500; max-width: 0em 3em;">
+  <div class="w3-modal-content">
+    <div class="w3-container">
+      <button onclick="document.getElementById('id01').style.display='none'"
+      class="w3-button">&times;</button>
+      <br>
+      <p style="font-size:1.5vw;">Search anything:</p>
+      <div class="gcse-search"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function openmodal() {
+    document.getElementById('id01').style.display='block';
+      document.getElementById("gsc-i-id1").focus();
+  }
+</script> <style>
+/* left-side-bar styling. */
+.left-side-bar-wrapper {
+  position: relative;
+  min-width: 180px;
+    width: 20%;
+}
+.left-side-bar-top {
+  border-right: 1px solid #f2f3f4;
+  width: 100%;
+  transition: all 0.2s ease-in;
+  margin-bottom: 1rem;
+  height: 230px;
+}
+.top-side-bar-links {
+  height: 180px;
+  overflow: auto;
+}
+.top-left #show-all:checked ~ .top-side-bar-links .left-side-bar-link {
+  display: list-item;
+}
+.top-left #show-all ~ label[for="show-all"] {
+  display: none;
+}
+.top-left {
+  position: relative;
+}
+.top-left #show-all {
+  display: none;
+}
+.top-left label[for="show-all"] {
+  position: absolute;
+  box-sizing: border-box;
+  width: 100%;
+  bottom: 0;
+  font-size: 0.75em;
+  text-align: center;
+  line-height: 1em;
+  border: 1px solid #ddd;
+  padding: 0.5em;
+  cursor: pointer;
+  text-transform: uppercase;
+  color: #444;
+}
+.top-left label[for="show-all"]:hover {
+  border: 1px solid #aaa;
+}
+.top-left label[for="show-all"]:active {
+  border: 1px solid #222;
+  background-color: #222;
+  color: #fff;
+}
+
+.second-left {
+  position: relative;
+  z-index: 99;
+}
+.left-side-bar {
+  border-right: 1px solid #f2f3f4;
+  height: calc(100vh - 45px);
+  overflow-y: auto;
+  list-style: none;
+  transition: all 0.2s ease-in;
+  background-color: #fff;
+}
+.left-side-bar-link a {
+  font-size: 14px;
+}
+.left-side-bar-link a:hover {
+  color: var(--blue);
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+.main-posts {
+  display: flex;
+}
+.main-posts.fix-bottom .left-side-bar,
+.main-posts.fix-top .left-side-bar {
+  position: fixed;
+  top: 60px;
+}
+.main-posts.flex-bottom {
+  align-items: flex-end;
+}
+
+.left-side-bar-wrapper .tag-title {
+  background-color: #000;
+  padding: 1rem;
+}
+.side-bar-tag-name {
+  color: #fff;
+  font-weight: bold;
+  text-transform: capitalize;
+}
+
+/* right-side-bar styling */
+.right-side-bar {
+  max-width: 300px;
+  width: 100%;
+}
+
+.right-side-bar-article {
+  background-color: #fff;
+  margin: 1rem 0;
+  border: 1px solid #000;
+  border-radius: 5px;
+}
+
+.right-side-bar-article-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 40px;
+  width: 90%;
+  left: -40px;
+  padding-left: 5px;
+  background-color: #000;
+  color: #fff;
+  font-weight: bold;
+  margin: 1rem 0;
+}
+
+.right-side-bar-article-content {
+  padding-left: 10px;
+  list-style: none;
+}
+
+.right-side-bar-article-content a:hover {
+  color: #05abe0;
+  transition: all ease 0.2s;
+}
+@media (max-width: 900px) {
+  .second-left {
+    z-index: 99;
+  }
+  .left-side-bar-top {
+    margin-bottom: 0;
+  }
+  .main-posts.fix-bottom .left-side-bar,
+  .main-posts.fix-top .left-side-bar {
+    position: fixed;
+    top: 38px;
+  }
+  .main-posts {
+    position: relative;
+  }
+}
+
+@media (max-width: 600px) {
+  .second-left {
+    z-index: 99;
+  }
+  .left-side-bar-top {
+    margin-bottom: 0;
+  }
+  .left-side-bar-wrapper {
+    display: none;
+  }
+}
+</style>
+<!-- GLOBAL MESSAGE (disabled)
+<script type="text/javascript" src="/assets/js/message.js?v=f19783a367"></script>
+<script type="text/javascript">
+  function generateMSG(tag) {
+    if (msg_contents['display'] == 0) {
+      var elem = document.querySelector('#global_message');
+      elem.style.display = 'none';
+      return;
+    }
+    if (msg_contents['announce'] == 0) {
+      if (tag in msg_contents) {
+        msg = msg_contents[tag];
+      } else {
+        msg = msg_contents['message'];
+      }
+    } else {
+      msg = msg_contents['global'];
+    }
+    num = Math.floor(Math.random() * msg.length);
+    msg = msg[num];
+    var text = msg['text'];
+    var link = msg['link'];
+    var msg_box = document.getElementById('global_message');
+    var a = document.getElementById('global_message_link');
+    a.href = link;
+    a.innerHTML = text;
+    msg_box.onclick = function () {
+      window.open(link, "_blank");
+    };
+  }
+</script>
+-->
+
+
+<main id="site-main" class="site-main outer" role="main">
+<div id="main-posts" class="main-posts">
+
+    <div id="left-side-bar-wrapper" class="left-side-bar-wrapper">
+  <div id="first-left" class="first-left">
+    <div id="left-side-bar-top" class="left-side-bar-top">
+      <aside id="left-side-bar-inner" class="left-side-bar-inner top-left">
+  <div class="tag-title">
+    <span class="side-bar-tag-name">
+      Interesting posts
+    </span>
+  </div>
+
+  <div class="top-side-bar-links">
+    <ul>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/best-competitive-programmers/">Top Competitive Programmers</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/unsolved-problems-in-algorithms/">Unsolved Problems in Algorithms</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/top-patent-person-in-india/">Top patent holders in India</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/get-developer-job-in-japan/">How to get Developer Job in Japan?</a></li>
+      <li class="left-side-bar-link"><a href="http://internship.opengenus.org">[INTERNSHIP]</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/most-profitable-software-patents/">STORY: Most Profitable Software Patents</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/earn-by-filing-patents/">How to earn by filing Patents?</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/richest-programmers-in-the-world/">Richest Programmers in the World</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/evolution-of-integer-multiplication/">STORY: Multiplication from 1950 to 2022</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/position-of-india-in-icpc/">Position of India at ICPC World Finals (1999 to 2021)</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/most-dangerous-line-of-code/">Most Dangerous Line of Code 💀</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/age-of-programming-languages/">Age of All Programming Languages</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/earn-money-online-as-programmer/">How to earn money online as a Programmer?</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/kolmogorov-n2-conjecture/">STORY: Kolmogorov N^2 Conjecture Disproved</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/grigori-perelman/">STORY: man who refused $1M for his discovery</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/bram-moolenaar/">STORY: Man behind VIM</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/galactic-algorithm/">STORY: Galactic algorithm</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/inventor-of-linked-list/">STORY: Inventor of Linked List</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/tag/questions/">Practice Interview Questions</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/list-of-binary-tree-problems/">List of 50+ Binary Tree Problems</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/list-of-dynamic-programming-problems/">List of 100+ Dynamic Programming Problems</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/list-of-array-problems/">List of 50+ Array Problems</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/greedy-algorithms-you-must-attempt/">11 Greedy Algorithm Problems [MUST]</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/list-of-linked-list-problems/">List of 50+ Linked List Problems</a></li>
+      <li class="left-side-bar-link"><a href="https://iq.opengenus.org/list-of-graph-algorithms/">100+ Graph Algorithms and Techniques</a></li>
+    </ul>
+    </ul>
+  </div>
+</aside>    </div>
+  </div>
+  <div class="second-left">
+    <div id="left-side-bar" class="left-side-bar">
+        <aside id="left-side-bar-inner" class="left-side-bar-inner">
+    <div class="tag-title">
+      <span class="side-bar-tag-name">
+        Algorithms
+        tutorial
+      </span>
+    </div>
+  <div class="left-side-bar-links">
+    <ul>
+
+      <!-- Sidebar fixed size 120x250 -->
+      <ins class="adsbygoogle"
+           style="display:inline-block;width:120px;height:250px"
+           data-ad-client="ca-pub-6329206778297580"
+           data-ad-slot="4020428451"></ins>
+      <script>
+           (adsbygoogle = window.adsbygoogle || []).push({});
+      </script>
+
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/convert-hexadecimal-to-binary/"
+              >Algorithm to convert Hexadecimal to Binary</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/linear-probing/"
+              >Linear Probing in Hashing</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/number-of-substrings-with-k-1s/"
+              >Number of Substrings in String of 0s and 1s that have K 1s</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/number-of-substrings-divisible-by-4/"
+              >Number of substrings in a string of integers that are divisible by 4</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/autobiographical-numbers/"
+              >Autobiographical Numbers</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/reverse-queue-using-stack/"
+              >Reverse a Queue using Stack</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/reverse-queue-using-queue/"
+              >Reverse a Queue using another Queue</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/intro-sort/"
+              >Intro Sort</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/separate-chaining-collision-resolution-technique/"
+              >Separate chaining collision resolution technique</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/linked-list-problems-book/"
+              >&quot;Linked List Problems&quot; book</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/elements-that-appear-more-than-n-3-times/"
+              >Find elements that appear more than N/3 times</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/max-path-sum-between-any-two-nodes-in-binary-tree/"
+              >Max path sum between two nodes in Binary Tree</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/k-th-smallest-element-of-two-sorted-arrays/"
+              >K-th smallest element of two sorted arrays</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/morris-inorder-traversal-in-binary-tree/"
+              >Morris Inorder Traversal in Binary Tree</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/0-1-knapsack-using-branch-and-bound/"
+              >0-1 Knapsack problem using Branch and Bound</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/bentley-ottmann-algorithm-for-plane-sweeping/"
+              >Bentley Ottmann Algorithm for Plane Sweeping</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/monotone-chain-algorithm/"
+              >Monotone Chain algorithm for Convex Hull</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/fixed-radius-near-neighbor/"
+              >Fixed Radius Near Neighbor Problem</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/point-with-minimum-sum-distance/"
+              >Point on a line with minimum sum distance from set of points</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/halfplane-intersection-problem/"
+              >Halfplane Intersection problem</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/polygon-triangulation/"
+              >Polygon Triangulation</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/applications-of-computational-geometry/"
+              >Applications of Computational Geometry</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/section-formula/"
+              >Section formula</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/trigonometry/"
+              >Introduction to Trigonometry</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/direction-of-point-from-line/"
+              >Direction of point from line segment</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/3d-geometry/"
+              >3D Geometry: Mathematics for Computational Geometry</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/check-if-line-intersects-circle/"
+              >Check if line intersects circle</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/map-overlay-problem/"
+              >Map Overlay Problem</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/circle-theorems-polygon/"
+              >Mathematics for Computational Geometry: Circle Theorems, Polygon</a></li>
+            <li class="left-side-bar-link"><a
+                target="_blank"
+                href="/points-lines-angles-circle-triangle/"
+              >Mathematics for Computational Geometry: Points, Lines, Angles, Circle, Triangle</a></li>
+    </ul>
+  </div>
+</aside>    </div>
+    </div>
+</div>
+  <div class="inner" id="inner">
+
+
+  <!-- Before Header -->
+  <style>
+  .adsense_widget_iq_1 { width: 320px; height: 100px; }
+  @media(min-width: 670px) { .adsense_widget_iq_1 { width: 468px; height: 60px; } }
+  @media(min-width: 1000px) { .adsense_widget_iq_1 { width: 728px; height: 90px; } }
+  </style>
+  <ins class="adsbygoogle adsense_widget_iq_1"
+       style="display:block"
+       data-ad-client="ca-pub-6329206778297580"
+       data-ad-slot="5373864615"
+       data-ad-format="auto"
+       data-full-width-responsive="true"></ins>
+  <script>
+       (adsbygoogle = window.adsbygoogle || []).push({});
+  </script>
+
+    <article id="post-full" class="post-full post tag-algorithm tag-computational-geometry no-image">
+
+      <header class="post-full-header">
+
+        <h1 class="post-full-title" style="color:#292929; font-size:30px ; ">Delaunay Triangulation</h1>
+
+        <!--     GLOBAL MESSAGE (disabled)    -->
+        <!--
+        <div id="global_message"
+          style="cursor:pointer; background:rgb(181, 222, 250); padding-top:20px; padding-bottom:20px;">
+          <a id='global_message_link' target="_blank" style="font-color: #a0a1a1; "></a>
+          <p id="hidden" hidden>Algorithms</p>
+          <script>generateMSG(document.getElementById('hidden').innerText);</script>
+        </div>
+        -->
+        
+        <!-- Bluehost Link -->
+        <!--
+        <p style="text-align: center;"><a href="https://bluehost.sjv.io/P0jXyQ" target="_blank">Get FREE domain for 1st year and build your brand new site</a></p>
+        -->
+      
+        <!--
+        <div style="text-align: center;">
+        <a href="https://www.bluehost.com/track/openq/site" target="_blank"> <img border="0" src="https://bluehost-cdn.com/media/partner/images/openq/728x90/728x90BW.png"> </a>
+        </div>
+        -->
+
+        <div class="upper_taglist">
+          <h4 id="text" class="less">
+            <div id="taglist">
+              <a target="_blank" href="/tag/algorithm/" title="Algorithms" class="tag_item">Algorithms</a>
+              <a target="_blank" href="/tag/computational-geometry/" title="computational geometry" class="tag_item">computational geometry</a>
+            </div>
+          </h4>
+        </div>
+
+
+        <button id="more" class="more-tags-button">More</button>
+        <button id="less" class="more-tags-button">Less</button>
+
+
+      </header>
+
+
+      <button id="scrollBtn" title="Go to top">Up</button>
+
+
+      <!-- Amazon.in general link -->
+      <!--
+      <script type="text/javascript" language="javascript">
+		var aax_size='728x90';
+		var aax_pubname = 'opengenus06-21';
+		var aax_src='302';
+	  </script>
+
+	  <script type="text/javascript" language="javascript" src="https://c.amazon-adsystem.com/aax2/assoc.js"></script>
+	  -->
+
+      <div class="post-content">
+      <section class="post-full-content">
+
+        <center>
+        <a href="http://internship.opengenus.org" target="_blank">
+        <picture>
+          <source media="(max-width: 530px)" srcset="/assets/images/internship-small.svg">
+          <img src="/assets/images/internship.svg" style='width:100%;' border="0" alt="Internship at OpenGenus">
+        </picture>
+        </a>
+        </center>
+
+        <p style="text-align: center;"><a href="https://amzn.to/3n4OHrJ" target="_blank">Get this book -> Problems on Array: For Interviews and Competitive Programming</a></p>
+
+        <!-- top ad (og iq) -->
+        <ins class="adsbygoogle adsense_widget_iq_1"
+             style="display:block"
+             data-ad-client="ca-pub-6329206778297580"
+             data-ad-slot="3019138753"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <!-- top (below header) multiplex -->
+        <ins class="adsbygoogle adsense_widget_iq_1"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-6329206778297580"
+             data-ad-slot="7656465295"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <div class="kg-card-markdown"><p>In this article, we discuss Delaunay Triangulation, its relation to Voronoi diagrams and algorithms to compute Delaunay Triangulation. This is an important topic in Computational Geometry.</p>
+<p>Table of contents:</p>
+<ol>
+<li>Motivation of Delaunay Triangulation</li>
+<li>Height interpolation</li>
+<li>Delaunay Triangulation
+<ul>
+<li>Delaunay graph</li>
+<li>Properties of Delaunay Graph</li>
+<li>Characterization</li>
+<li>Angle Optimal Triangulations</li>
+</ul>
+</li>
+<li>Complexity of a triangulation</li>
+<li>How to choose a good triangulation?</li>
+<li>Edge flips</li>
+<li>How to determine illegal edges without comparing angles</li>
+<li>Legal triangulations</li>
+<li>Computing Delaunay Triangulation (Randomized incremental construction using edge flips)</li>
+<li>Conclusion</li>
+</ol>
+<p>Prerequisite: <a href="https://iq.opengenus.org/voronoi-diagram/">Voronoi diagrams</a></p>
+<h2 id="motivationofdelaunaytriangulation">Motivation of Delaunay Triangulation</h2>
+<p>We want to estimate rainfall and come up with a precipitation map for a country, data is not always available because rain gauge networks are not evenly distributed therefore we use spatial interpolation to estimate rainfall at locations without recorded data by using known rainfall readings at nearby locations.</p>
+<p><em>Spatial interpolation</em>, this is a process of using points with known values to estimate the values of other unknown points.</p>
+<p>We shall discuss <em>height interpolation</em> to explain spatial interpolation.</p>
+<h2 id="heightinterpolation">Height interpolation</h2>
+<p><em>Problem:</em> We are given a topographical map.</p>
+<p><img src="/content/images/2021/12/del32.png" alt="del32"></p>
+<p>We want to measure and show heights of all points from absolute 0.<br>
+<em>Naively</em>, we can measure all heights from every point on the map but this will be cumbersome.<br>
+<em>Optimally</em>, we can take the heights of some points and interpolate the rest of the points, that is use the known to get the unknown. This is called <em>height interpolation</em>.<br>
+To do this we fly a plane over a map and we get the height measurements for different points on the map p = (px, py, pz).</p>
+<p><img src="/content/images/2021/11/del2.jpg" alt="del2"></p>
+<p>We project the points on the plane and get a map.</p>
+<p><img src="/content/images/2021/11/del3.png" alt="del3"></p>
+<p>Therefore to estimate the height of other closer points (x, y). We interpolate by looking at few closer points.<br>
+To interpolate we use triangulation of the point set.</p>
+<p><em>How?</em></p>
+<p>We subdivide the plane into cells such that within each cell every point has the same nearest neighbor from any point in the cell, this is called a <em>voronoi diagram</em>, We have also discussed voronoi diagrams <a href="https://iq.opengenus.org/author/erick/">here</a>.</p>
+<p><img src="/content/images/2021/11/del4.png" alt="del4"></p>
+<p>Given two heights, we can interpolate between the heights easily to get an unknown, given a plane with <em>multiple points(heights)</em>, we need to choose heights which we then use to interpolate from a chosen height. This is where <em>triangulation</em> comes in.</p>
+<p><img src="/content/images/2021/11/del5.png" alt="del5"></p>
+<p>The image above represents a subdivision of a plane into triangles within the convexity of the points.<br>
+Now, to get an unknown we take 3 vertices of a triangle and interpolate appropriately.</p>
+<p><img src="/content/images/2021/11/del6.png" alt="del6"></p>
+<h2 id="delaunaytriangulation">Delaunay Triangulation</h2>
+<p><em>Definition:</em> Given <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">P</mi><mo>⊂</mo><msup><mi mathvariant="double-struck">R</mi><mn>2</mn></msup></math>, a triangulation of P is a maximal planar subdivision with vertex set P.</p>
+<p>A triangulation can also be defined as delaunay if for every triangle it holds that the interior of its surrounding circle is empty. <em>empty circumcircle property</em>. <a href="https://www.desmos.com/calculator/urbddymicb">visualize</a><br>
+We will see this in the properties section.</p>
+<h3 id="delaunaygraph">Delaunay graph</h3>
+<p>Given a set P of n points on a plane.<br>
+Vor(P) = subdivision of the plane into voronoi cells, edges and vertices.</p>
+<p><img src="/content/images/2021/11/del7.png" alt="del7"></p>
+<p><em>Dual graph:</em> The graph G = (P, E) with <em>E = {(p,q) | V(p) and V(q) are adjacent}</em> is called the dual graph of Vor(P).<br>
+The delaunay graph is the <em>dual graph</em> of the voronoi diagram.<br>
+That means, for every cell of the voronoi diagram, we want to have a vertex in the delaunay graph.</p>
+<p>We add edges between two points if the points are adjacent(share an edge) to each other in the voronoi diagram to get a dual graph.</p>
+<p><img src="/content/images/2021/11/del8.png" alt="del8"></p>
+<p>We straighten the lines of the dual graph to obtain a <em>delanuay graph</em>.</p>
+<p><img src="/content/images/2021/11/del9.png" alt="del9"></p>
+<p><em>Definition</em>: The delanuay graph DG(P) is the straight line drawing of graph G.</p>
+<h3 id="propertiesofdelaunaygraph">Properties of Delaunay Graph</h3>
+<p><em><strong>Planarity. (no crossings)</strong></em><br>
+<em><strong>Lemma:</strong></em> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">P</mi><mo>⊂</mo><msup><mi mathvariant="double-struck">R</mi><mn>2</mn></msup></math> finite <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>⇒</mo></math> DG(P) plane.</p>
+<p><em><strong>proof:</strong></em> (by contradiction).<br>
+Edge pq is in <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">DG</mi><mo>(</mo><mi mathvariant="normal">P</mi><mo>)</mo><mo>⇔</mo><mo>∃</mo><msub><mi mathvariant="normal">D</mi><mi mathvariant="normal">pq</mi></msub></math> closed disk such that <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">p</mi><mo>,</mo><mi mathvariant="normal">q</mi><mo>∈</mo><mo>∂</mo><msub><mi mathvariant="normal">D</mi><mi>pq</mi></msub></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>{</mo><mi>p</mi><mo>,</mo><mi>q</mi><mo>]</mo><mo>=</mo><msub><mi mathvariant="normal">D</mi><mi>pq</mi></msub><mo>∩</mo><mi>P</mi></math><br>
+A property of voronoi edges, if we have two cells that correspond to two sides p and q, then we have an edge p and q in the delanuay graph iff there is an edge between the cells in the voronoi diagram.</p>
+<p><img src="/content/images/2021/11/del10-1.png" alt="del10-1"></p>
+<p>We have a voronoi edge iff there is a closed disk that contains the two sides on its boundary and no other points in its boundary or interior.</p>
+<p><img src="/content/images/2021/11/del11-1.png" alt="del11-1"></p>
+<p>Let say C is the center of the disk and we have the two edges <em>spq</em> and <em>sqp</em> between p and the center and between q and the center.</p>
+<p><img src="/content/images/2021/11/del12.png" alt="del12"></p>
+<p>We assume that there is a crossing that is, any other edge in the delanuay graph <em>uv</em> that crosses the edge <em>pq</em>.</p>
+<p><img src="/content/images/2021/11/del13-2.png" alt="del13-2"></p>
+<p>We obtain two triangles <em>pqx</em> and <em>uvy</em>.</p>
+<p>Since there is an edge, there has to be a disk that contains <em>uv</em> on its boundary and no other point on its boundary or interior.</p>
+<p><em>u</em> and <em>v</em> cannot lie in the disk of <em>p</em> and <em>q</em> because of the <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>t</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub></math> edge, therefore <em>uv</em> cannot lie inside the triangle <em>pqx</em>, the only way a crossing exists between <em>uv</em> and <em>pq</em>, is that the edge <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>t</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub></math> crosses another point(z) of the triangle.</p>
+<p><img src="/content/images/2021/11/del14-1.png" alt="del14-1"></p>
+<p>We have 2 triangles that intersect at exactly 3 points, but they have to intersect in an even number of points.<br>
+<em>pq</em> has 2 intersections, <em>uv</em> has 2 intersections. The remaining intersection involves the blue edges.</p>
+<p>The blue edges are defined by a site and the center of the circle which lies in the voronoi edge, therefore the edge <em>spq</em> has to go from one voronoi cell to its boundary.<br>
+<em>sqp</em> lies in the cell <em>q</em> and <em>spq</em> lies in the cell <em>p</em>,<br>
+<em>suv</em> lies in cell <em>u</em> and <em>svu</em> in cell <em>v</em>.<br>
+This means they can only intersect at their end points.<br>
+Therefore they have to intersect in the center so that both disks have the same center therefore none of them can be empty.</p>
+<p><math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi>S</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub><mo>⊂</mo><mi>V</mi><mo>(</mo><mi>p</mi><mo>)</mo><mo>,</mo><msub><mi>S</mi><mrow><mi>p</mi><mi>q</mi></mrow></msub><mo>⊂</mo><mi>V</mi><mo>(</mo><mi>q</mi><mo>)</mo><mo>,</mo><msub><mi>S</mi><mrow><mi>u</mi><mi>v</mi></mrow></msub><mo>⊂</mo><mi>V</mi><mo>(</mo><mi>u</mi><mo>)</mo><mo>,</mo><msub><mi>S</mi><mrow><mi>v</mi><mi>u</mi></mrow></msub><mo>⊂</mo><mi>V</mi><mo>(</mo><mi>v</mi><mo>)</mo></math></p>
+<p>This means that all vertices have to lie in the same circle, which is not possible, and we have contradiction.<br>
+We cannot have a crossing between <em>pq</em> and <em>uv</em>, therefore the graph is plane.</p>
+<h3 id="characterization">Characterization</h3>
+<p>Given a finite point set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">P</mi><mo>⊂</mo><msup><mi mathvariant="double-struck">R</mi><mn>2</mn></msup></math>.<br>
+<strong>(i)</strong> Three points <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>p</mi><mo>,</mo><mi>q</mi><mo>,</mo><mi>r</mi><mo>∈</mo><mi>P</mi></math> are vertices of the same face in the delanuay graph iff there is a voronoi vertex.</p>
+<p><img src="/content/images/2021/11/del15.png" alt="del15"></p>
+<p>That is, there is some disk that contains the 3 points on its boundary but no other points in its interior.<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mi>D</mi><mi>G</mi><mo>(</mo><mi>P</mi><mo>)</mo><mo>⇔</mo><mi>i</mi><mi>n</mi><mi>t</mi><mi>e</mi><mi>r</mi><mi>i</mi><mi>o</mi><mi>r</mi><mo>(</mo><mi>C</mi><mo>(</mo><mi>p</mi><mo>,</mo><mi>q</mi><mo>,</mo><mi>r</mi><mo>)</mo><mo>)</mo><mo>∩</mo><mi>P</mi><mo>=</mo><mo>⊘</mo></math></p>
+<p><strong>(ii)</strong> We have an edge iff there is a voronoi edge, that is, a there is a disk that contains exactly the two sides on its boundary and no other sides in the interior.<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∂</mo><mi mathvariant="normal">D</mi><mo>∩</mo><mi mathvariant="normal">P</mi><mo>=</mo><mo>{</mo><mi mathvariant="normal">p</mi><mo>,</mo><mi mathvariant="normal">q</mi><mo>}</mo><mo> </mo><mi mathvariant="normal">and</mi><mo> </mo><mi mathvariant="normal">interior</mi><mo>(</mo><mi mathvariant="normal">D</mi><mo>)</mo><mo>∩</mo><mi mathvariant="normal">P</mi><mo>=</mo><mo>⊘</mo></math></p>
+<p><img src="/content/images/2021/11/del16.png" alt="del16"></p>
+<p><em><strong>Note:</strong></em> A delanuay triangulation is a triangulation that has a delanuay graph as its subgraph.</p>
+<h3 id="angleoptimaltriangulations">Angle Optimal Triangulations</h3>
+<p><em>Definition:</em> A triangulation of a point set <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">P</mi><mo>⊂</mo><msup><mi mathvariant="double-struck">R</mi><mn>2</mn></msup></math> is a maximal planar subdivision with vertex set p.<br>
+Planarity means it is non-crossing as we have shown in the above section.<br>
+It is also maximal as we add as many edges as possible so that every face forms a triangle</p>
+<p><img src="/content/images/2021/11/del17.png" alt="del17"></p>
+<p><img src="/content/images/2021/11/del18.png" alt="del18"></p>
+<p>We observe the following;</p>
+<ul>
+<li>Any inner face is a triangle.</li>
+<li>The outer face is a convex hull(the opposite of the outer face) CH(P).</li>
+</ul>
+<p><img src="/content/images/2021/11/del19.png" alt="del19"></p>
+<h2 id="complexityofatriangulation">Complexity of a triangulation</h2>
+<p><em><strong>Theorem:</strong></em> Let P be a set of n non-collinear points(if they are collinear no triangle can be formed) and let <em>h</em> be the number of vertices of <em>CH(P)</em>.<br>
+Then every triangulation P has <em>t(n, h)</em> triangles and <em>e(n, h)</em> edges.</p>
+<p>To compute t(n, h) and e(n, h), we can use <em><strong>Euler's polyhedron formula</strong></em> for connected planar graphs. That is <em>#faces - #edges + #vertices = 2 including the outer face</em>.</p>
+<p>If the <em>convex hull</em> is small enough(3 points) we have <em>2n -5 triangles</em> and <em>3n - 6 edges</em> and as the complexity of the convex hull increases the number of edges and triangles decreases.</p>
+<p>In general we have <em>2n -2 - h triangles</em> and <em>3n - 3 - h</em> edges.</p>
+<p>Given a point set we have many ways to triangulate it.<br>
+We first used a voronoi diagram where we used height interpolation to estimate unknowns following that we want to use triangulations to obtain a continuous height of the plane.</p>
+<h2 id="howtochooseagoodtriangulation">How to choose a good triangulation?</h2>
+<p>We are given the following points set with different triangulations.</p>
+<p><img src="/content/images/2021/11/del20-1.png" alt="del20-1"></p>
+<p>They differ in the green and red points respectively, If we want to perform height interpolations between the two points we obtain <em>985</em> and <em>23</em> when we interpolate on the red edge and green edge.</p>
+<p>It is more probable that <em>985</em> is correct since the edge is much shorter, it is also more natural to go with values that are much closer to the points.</p>
+<p>That is, on the left image we have a consistent terrain of high points(mountains/hills) but in the second there are high terrains(mountains) and then a sudden drop(valley) which is not consistent.</p>
+<p>We could also argue that the second gets its values from points that are far away (thin triangles).<br>
+<strong>Intuition:</strong> We want to avoid thin triangles - this is caused by small angles which means that we want to maximize the smallest angle within a triangle.</p>
+<p><em>Definition(angle vectors):</em> Let T be a triangulation of P with m triangles and 3m vertices. Its <em>angle vector</em> is <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">A</mi><mo>(</mo><mi mathvariant="normal">T</mi><mo>)</mo><mo>=</mo><mo>(</mo><msub><mi mathvariant="normal">α</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mo>.</mo><mo>.</mo><mo>,</mo><msub><mi mathvariant="normal">α</mi><mrow><mn>3</mn><mi mathvariant="normal">m</mi></mrow></msub><mo>)</mo></math> where <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="normal">α</mi><mn>1</mn></msub><mo>,</mo><mo>.</mo><mo>.</mo><mo>.</mo><mo>,</mo><msub><mi mathvariant="normal">α</mi><mrow><mn>3</mn><mi mathvariant="normal">m</mi></mrow></msub></math> are the angles of T sorted in increasing value.</p>
+<p>For the two triangulations <math xmlns="http://www.w3.org/1998/Math/MathML"><mi>T</mi></math> and <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>T</mi><mo>'</mo></msup></math> we define an order A(T) &gt; A(<math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi>T</mi><mo>'</mo></msup></math>) according to the lexographical ordering.<br>
+That is we look at the smallest angle and sort then based on that value.<br>
+The first(left) will be higher than the second because it has a higher starting value.</p>
+<p><img src="/content/images/2021/11/del21.png" alt="del21"></p>
+<p>Therefore in terms of <em>angle optimality</em> and avoiding small angles we would choose the first which is maximal.</p>
+<p>We state that a triangulation is <em>angle optimal</em> if its angle vector is larger than or equal to any other angle vector of any other triangulation.</p>
+<h2 id="edgeflips">Edge flips</h2>
+<p><em>Definition:</em> Let T be a triangulation. An edge <em>e</em> of T is <em>illegal</em> if the smallest angle of the triangles incident to <em>e</em> can be increased by 'flipping' <em>e</em>.</p>
+<p>Given the edge <em>e</em> below, if we flip it we get a larger angle, therefore we say that <em>e</em> is an illegal edge.</p>
+<p><img src="/content/images/2021/11/del22.png" alt="del22"></p>
+<p>To get an angle optimal triangulation we have to flip the edge e.<br>
+<em>Note:</em> Flipping an edge also means that angle vector will have increased in terms of lexical graphical ordering.</p>
+<h3 id="howtodetermineillegaledgeswithoutcomparingangles">How to determine illegal edges without comparing angles</h3>
+<p><em><strong>Thales theorem:</strong></em> If line <em>ab</em> is a diameter, then the angle at any third point on the circle C is 90 degrees.<br>
+That is, diameter of a circle always subtends a right angle to any point on the circle.</p>
+<p><img src="/content/images/2021/11/del23-1.png" alt="del23-1"></p>
+<p><em><strong>A generalization (Thales++).</strong></em><br>
+<em><strong>Theorem:</strong></em> Let <em>C</em> be a circle, <em>l</em> a line intersecting C in points <em>a</em> and <em>b</em> and <em>p, q, r, s</em> be points lying on the same side as <em>l</em>. Suppose that <em>p, q</em> lie on <em>C</em>, <em>r</em> lies inside <em>C</em> and <em>s</em> lies outside <em>C</em>.<br>
+Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∡</mo><mi>a</mi><mi>r</mi><mi>b</mi><mo>&gt;</mo><mo>∡</mo><mi>a</mi><mi>p</mi><mi>b</mi><mo>=</mo><mo>∡</mo><mi>a</mi><mi>q</mi><mi>b</mi><mo>&gt;</mo><mi>a</mi><mi>s</mi><mi>b</mi></math> where <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∡</mo><mi>a</mi><mi>b</mi><mi>c</mi></math> denotes the smaller angle defined by 3 points <em>a, b,</em> and <em>c</em>.</p>
+<p><img src="/content/images/2021/11/del24.png" alt="del24"></p>
+<p>Simply put, angles <em>within</em> the circle at any point are <em>equal</em>, <em>outside</em> angles are <em>smaller</em> than the ones on the circle and <em>inner</em> angles are <em>larger</em> than all angles.</p>
+<h3 id="legaltriangulations">Legal triangulations</h3>
+<p>We use the generalized theorem to characterize an edge as <em>legal</em> or <em>illegal</em>.</p>
+<p><strong>Lemma:</strong> Let <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>△</mo></math>prq and <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>△</mo></math>pqs be two adjacent triangles in T and C be the circumcircle of <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>△</mo></math>prq.<br>
+Then <math xmlns="http://www.w3.org/1998/Math/MathML"><mover accent='true'><mrow><mi>p</mi><mi>q</mi></mrow><mo>¯</mo></mover><mo> </mo></math> is illegal <math xmlns="http://www.w3.org/1998/Math/MathML"><mo>⇔</mo></math> <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">s</mi><mo>∈</mo><mi mathvariant="normal">interior</mi><mo>(</mo><mi mathvariant="normal">C</mi><mo>)</mo></math></p>
+<p>If <em>p, q, r, s</em> form a convex quadrilateral and <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">s</mi><mo>∉</mo><mo>∂</mo><mi mathvariant="normal">C</mi></math> then either <math xmlns="http://www.w3.org/1998/Math/MathML"><mover accent='true'><mrow><mi>p</mi><mi>q</mi></mrow><mo>¯</mo></mover></math> or <math xmlns="http://www.w3.org/1998/Math/MathML"><mover accent='true'><mrow><mi>r</mi><mi>s</mi></mrow><mo>¯</mo></mover><mo> </mo></math>is <em>illegal</em>.</p>
+<p><img src="/content/images/2021/12/del25.png" alt="del25"></p>
+<p>We want to know whether <em>pq</em> is illegal, therefore we look at the incident triangles <em>prq</em> and <em>pqs</em>, which gives us the points r and s.<br>
+Then <em>pq</em> is illegal iff we take the circumcircle <em>p q r</em>, and find that <em>s</em> lies inside this circle then <em>pq</em> is illegal but if <em>s</em> lies outside then <em>pq</em> is legal.</p>
+<p><em><strong>Proof</strong></em>.<br>
+We want to show that for all angles in the triangulation after the flip, there is an angle in the original triangulation that is smaller.<br>
+<math xmlns="http://www.w3.org/1998/Math/MathML"><mo>∀</mo><msup><mi mathvariant="normal">α</mi><mo>'</mo></msup><mo> </mo><mi mathvariant="normal">in</mi><mo> </mo><msup><mi mathvariant="normal">T</mi><mo>'</mo></msup><mo> </mo><mo>∃</mo><mi mathvariant="normal">α</mi><mo> </mo><mi mathvariant="normal">in</mi><mo> </mo><mi mathvariant="normal">T</mi><mo> </mo><mi mathvariant="normal">s</mi><mo>.</mo><mi mathvariant="normal">t</mi><mo> </mo><mi mathvariant="normal">α</mi><mo>&lt;</mo><msup><mi mathvariant="normal">α</mi><mo>'</mo></msup></math></p>
+<p>We have the new two angles, for both we have smaller angles(colored orange)</p>
+<p><img src="/content/images/2021/12/del26-1.png" alt="del26-1"></p>
+<p>We look at the angle <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">α</mi><mo>'</mo></msup></math> in <em>qrs</em> and we extend the segment <em>rs</em> until we hit the disk.</p>
+<p><img src="/content/images/2021/12/del27-1.png" alt="del27-1"></p>
+<p>We use the segment between <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">S</mi><mo>'</mo></msup></math> and <em>q</em> as the base segment for <em>thales++ generalized theorem</em>.</p>
+<p>According to the theorem, if we consider the angle <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">α</mi><mo>'</mo></msup></math> and the angle at <em>spq</em>, they are exactly the same because they both lie on the circle.</p>
+<p><img src="/content/images/2021/12/del28.png" alt="del28"></p>
+<p>Looking at the angle <em>sqp</em>, for <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">α</mi><mo>'</mo></msup><mo> </mo></math> we found a smaller <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">α</mi></math>.<br>
+We can do the same for the remaining three angles and find a smaller <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">α</mi></math> in the blue colored triangulation.</p>
+<p>This means that the minimum of blue angles has to be smaller that the minimum of green triangulation.</p>
+<p>Is s lies on the boundary of the disk <math xmlns="http://www.w3.org/1998/Math/MathML"><mi mathvariant="normal">s</mi><mo>∉</mo><mo>∂</mo><mi mathvariant="normal">D</mi></math>, then both <em>pq</em> and <em>rs</em> are legal. That is, if we take the blue triangulation, the we show that <em>s</em> is not in the interior of the disk so <em>pq</em> is legal and if we take the green triangulation, we show that <em>p</em> is not in the interior of the disk so <em>sr</em> is legal.<br>
+This means that there could be more that one legal triangulations, meaning however we flip the edges we end up with a legal triangulation.</p>
+<p><em><strong>Proof that a legal triangulation exists.</strong></em></p>
+<p><em>Algorithm:</em></p>
+<pre><code class="language-cpp">Let T be any triangulation of P.
+While T has an illegal edge e, flip e 
+Return T.
+</code></pre>
+<p>A(T) increases for every flip and there is a finite number of triangulations of P, (P &lt; ∞) therefore this algorithm will at some point have to terminate after some finite number of steps.</p>
+<p>With have shown that every angle-optimal triangulation is legal, if it is illegal we can improve it then it is no longer angle optimal.</p>
+<h2 id="computingdelaunaytriangulationrandomizedincrementalconstructionusingedgeflips">Computing Delaunay Triangulation (Randomized incremental construction using edge flips)</h2>
+<p>We are given the following point sets,</p>
+<p><img src="/content/images/2021/12/del29-1.png" alt="del29-1"></p>
+<p>The 3 outer points represent the outer face.</p>
+<p><em><strong>Algorithm:(Delanuay Triangulation)</strong></em></p>
+<ol>
+<li>Initialize T as a triangle △p0, p-1, p-2 containing all points form P.</li>
+<li>Compute a random permutation of p1, ... pn;</li>
+<li>For r &lt;- 1 to n do the following</li>
+<li>Insert(<math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi></msub></math>, T)</li>
+<li>Discard p0, p-1, and p-2 with all their incident edges.</li>
+<li>Return T.</li>
+</ol>
+<p><em><strong>Explanation.</strong></em></p>
+<ul>
+<li>Create a larger outer triangle.</li>
+<li>Randomly permute points to use randomized incremental construction.</li>
+<li>We insert the points one by one to the current triangulation creating a delanuay triangulation.</li>
+<li>After the steps we discard the outer triangle. and what remains is the delanuay triangulation of the point set.</li>
+</ul>
+<p><em><strong>Algorithm. INSERT(pr, T)</strong></em></p>
+<p><img src="/content/images/2021/12/del30.png" alt="del30"></p>
+<ol>
+<li>Find triangle ∈ T containing <math xmlns="http://www.w3.org/1998/Math/MathML"><msub><mi mathvariant="normal">p</mi><mi mathvariant="normal">r</mi></msub></math>.</li>
+<li>If pr lies in △pi pj pk do the following</li>
+<li>Add edges from pr to pi, pj, pk</li>
+<li>LegalizeEdge(pr, pi pj, T)</li>
+<li>LegalizeEdge(pr, pj pk T)</li>
+<li>LegalizeEdge(pr, pk pi, T)</li>
+<li>else (pr lies on edge pi pj)</li>
+<li>LegalizeEdge(pr, pi pl, T)</li>
+<li>LegalizeEdge(pr, pl pj, T)</li>
+<li>LegalizeEdge(pr, pj pk, T)</li>
+<li>LegalizeEdge(pr, pk pi, T)</li>
+</ol>
+<p><em><strong>Explanation.</strong></em><br>
+We check legality of opposing edges <em>pi pk, pk, pj</em> and <em>pi, pj</em> by calling LegalizeEdge recursively three times.<br>
+If edge is not legal we flip and check the remaining edges.</p>
+<p><em><strong>Algorithm. Legalize Edge(pr, pipj, T)</strong></em></p>
+<p><img src="/content/images/2021/12/del31.png" alt="del31"></p>
+<ol>
+<li>If pi pj is illegal then flip edge.</li>
+<li>Let △pi pj ph be the adjacent triangle.</li>
+<li>Replace pi pj by pr ph.</li>
+<li>LegalizeEdge(pr, pj ph, T).</li>
+<li>LegalizeEdge(pr, ph pi, T).</li>
+</ol>
+<p><em><strong>Explanation</strong></em><br>
+We check whether it is illegal by checking whether the point on the other side in the circumcircle of the triangle <em>pi pj pr</em>.<br>
+If it is inside, the edge is illegal so we flip.<br>
+Then recursive call the algorithm on the edges <em>pj ph</em> and <em>ph pi</em>.</p>
+<h3 id="conclusion">Conclusion</h3>
+<p><em><strong>Theorem:</strong></em><br>
+A <em>delanuay triangulation</em> of an arbitrary set of n points in a plane can be computed in <strong>O(nlogn)</strong> time.<br>
+We compute the voronoi diagram and dual graph and fill holes to get delanuay triangulation.</p>
+<p><em><strong>Colloray:</strong></em><br>
+If the points are in general position, we get an angle optimal triangulation of a set of n points in <strong>O(nlogn)</strong> time.</p>
+<p><em><strong>Colloary:</strong></em><br>
+If the points are in arbitrary  positions we can maximize the minimum angle in <strong>O(nlogn)</strong> time by filling the holes arbitrarily.</p>
+<p><em><strong>Corollary:</strong></em><br>
+An angle optimal triangulation of an arbitrary set of n points can be computed in <strong>O(<math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">n</mi><mn>2</mn></msup></math>)</strong> time.<br>
+We compute the delanuay graph, and fill holes(vertices on a common circle) to optimize the angle vector for each hole. which are completely independent from each other.<br>
+We triangulate and use the flipping algorithm until we get an angle optimal sequence, after <math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">n</mi><mn>2</mn></msup></math>flips we get an optimal.<br>
+Which translates to <strong><math xmlns="http://www.w3.org/1998/Math/MathML"><msup><mi mathvariant="normal">n</mi><mn>2</mn></msup></math></strong> time for filling these holes.</p>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="http://www.cs.uu.nl/geobook/interpolation.pdf">Notes on Delanuay Triangulation and Height Interpolation</a> by Department of Information and Computing Sciences at Utrecht University</li>
+<li><a href="http://www.personal.psu.edu/cxc11/AERSP560/DELAUNEY/13_Two_algorithms_Delauney.pdf">Two algorithms for constructing a Delaunay Triangulation</a> by D. T. Lee and B. J. Schachter (published in February 1980) at International Journal of Computer and Information Sciences.</li>
+</ul>
+<p>With this article at OpenGenus, you must have a strong idea of Delaunay Triangulation.</p>
+</div>
+
+        <!-- after content multiplex -->
+        <ins class="adsbygoogle adsense_widget_iq_1"
+             style="display:block"
+             data-ad-format="autorelaxed"
+             data-ad-client="ca-pub-6329206778297580"
+             data-ad-slot="8550309798"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+        <!-- after content iq.opengenus.org -->
+        <ins class="adsbygoogle adsense_widget_iq_1"
+             style="display:block"
+             data-ad-client="ca-pub-6329206778297580"
+             data-ad-slot="2677909004"
+             data-ad-format="auto"
+             data-full-width-responsive="true"></ins>
+        <script>
+             (adsbygoogle = window.adsbygoogle || []).push({});
+        </script>
+
+      </section>
+      </div>
+
+  </div>
+  </div>
+
+  
+  <!-- shuffle button -->
+
+  <footer>
+    <div class="post-full-footer">
+
+      <section class="author-card">
+        <img class="author-profile-image" src="/content/images/2021/11/erick.jpg" alt="Erick Lumunge" />
+
+        <section class="author-card-content">
+          <h4 class="author-card-name"><a href="/author/erick/">Erick Lumunge</a></h4>
+          <p>Erick Lumunge is a passionate programmer with a computer science background who loves to learn about and use code to impact lives positively.</p>
+        </section>
+      </section>
+
+      <div class="post-full-footer-right">
+        <a class="author-card-button" href="/author/erick/">Read More</a>
+      </div>
+
+
+    </div>
+
+    <!--
+    <style>
+      	.fa-heart-o {
+		  color: red;
+		  cursor: pointer;
+		}
+		.fa-heart {
+		  color: red;
+		  cursor: pointer;
+		}
+      </style>
+      <script type="text/javascript" src="https://use.fontawesome.com/0206006232.js"></script>
+      <p style="font-size:30px; text-align:center">Vote for Erick Lumunge for <a href="https://iq.opengenus.org/vote-writer-people-choice/">Top Writers 2021</a>: 
+			<span id = heart><i class="fa fa-heart-o" aria-hidden="true" ></i> </span>
+	  </p>
+    -->
+
+
+    <div class="Authors_list">
+    <p>Improved & Reviewed by:</p><br>
+
+      <a href="/author/ue/" title="Ue Kiao, PhD" class="author author-5e3989de06e7e604626a4647 ue">
+        <div class="Authors_tag_item " href="/author/ue/" title="Ue Kiao, PhD">
+          <img class="co-author-profile-image" src="/content/images/2020/04/ue-kiao.jpg" alt="Ue Kiao, PhD" />
+          Ue Kiao, PhD
+        </div>
+      </a>
+
+
+      <a href="/author/opengenus/" title="OpenGenus Foundation" class="author author-1 opengenus">
+        <div class="Authors_tag_item " href="/author/opengenus/" title="OpenGenus Foundation">
+          <img class="co-author-profile-image" src="/content/images/2018/06/logo_small.png" alt="OpenGenus Foundation" />
+          OpenGenus Foundation
+        </div>
+      </a>
+
+    </div>
+
+    <!-- footer tag list disabled
+    <h4>
+
+      <div class="taglabel">
+
+        <h4><i class="fa fa-tag"></i> Tags</h4>
+      </div>
+      <div class="taglist">
+
+        <a target="_blank" href="/tag/algorithm/" title="Algorithms" class="tag_item">Algorithms</a>
+        <a target="_blank" href="/tag/computational-geometry/" title="computational geometry" class="tag_item">computational geometry</a>
+
+      </div>
+      </li>
+    </h4>
+    -->
+
+
+  </footer>
+
+  <script>
+var wrapper = document.getElementById("main-posts");
+var post_full = document.getElementById("post-full");
+var right_side_bar = document.getElementById("right-side-bar");
+var sidebar = document.getElementById("left-side-bar");
+
+window.onscroll = function () {
+  document
+    .getElementById("left-side-bar")
+    .setAttribute(
+      "style",
+      "display:block;width:" +
+        document.getElementById("left-side-bar-wrapper").offsetWidth +
+        "px"
+    );
+  document.getElementById("left-side-bar").style.width =
+    document.getElementById("left-side-bar-wrapper").offsetWidth;
+  //sidebar < main
+  if (sidebar.offsetHeight < post_full.offsetHeight) {
+    //sidebar < screen - stick to top
+    if (sidebar.offsetHeight < window.innerHeight) {
+      if (
+        wrapper.getBoundingClientRect().bottom < window.innerHeight &&
+        wrapper.getBoundingClientRect().bottom < sidebar.offsetHeight
+      ) {
+        wrapper.classList.remove("fix-top");
+        wrapper.classList.add("flex-bottom");
+      } else if (wrapper.getBoundingClientRect().top < 0) {
+        wrapper.classList.add("fix-top");
+        wrapper.classList.remove("flex-bottom");
+      } else {
+        wrapper.classList.remove("fix-top");
+        wrapper.classList.remove("flex-bottom");
+      }
+    }
+    //wrapper taller than sidebar - stick to bottom
+    else if (sidebar.offsetHeight < wrapper.offsetHeight) {
+      if (wrapper.getBoundingClientRect().bottom < window.innerHeight) {
+        wrapper.classList.remove("fix-bottom");
+        wrapper.classList.add("flex-bottom");
+      } else if (
+        wrapper.getBoundingClientRect().bottom >
+        sidebar.offsetHeight + window.innerHeight
+      ) {
+        wrapper.classList.remove("fix-bottom");
+        wrapper.classList.remove("flex-bottom");
+      } else {
+        wrapper.classList.add("fix-bottom");
+        wrapper.classList.remove("flex-bottom");
+      }
+    }
+  }
+};
+</script>
+  <!--
+  <div id='discourse-comments'></div>
+  -->
+  
+  </article>
+
+  </div>
+</main>
+
+<aside class="read-next outer">
+  <div class="inner">
+    <div class="read-next-feed">
+      <article class="read-next-card"   >
+        <header class="read-next-card-header">
+          <small class="read-next-card-header-sitetitle">&mdash; OpenGenus IQ: Computing Expertise &amp; Legacy &mdash;</small>
+          <h3 class="read-next-card-header-title"><a href="/tag/algorithm/">Algorithms</a></h3>
+        </header>
+        <div class="read-next-divider"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 14.5s2 3 5 3 5.5-2.463 5.5-5.5S21 6.5 18 6.5c-5 0-7 11-12 11C2.962 17.5.5 15.037.5 12S3 6.5 6 6.5s4.5 3.5 4.5 3.5"/></svg>
+</div>
+        <div class="read-next-card-content">
+          <ul>
+            <li><a href="/convert-hexadecimal-to-binary/">Algorithm to convert Hexadecimal to Binary</a></li>
+            <li><a href="/linear-probing/">Linear Probing in Hashing</a></li>
+            <li><a href="/number-of-substrings-with-k-1s/">Number of Substrings in String of 0s and 1s that have K 1s</a></li>
+          </ul>
+        </div>
+        <footer class="read-next-card-footer">
+          <a href="/tag/algorithm/">See all 732 posts
+            →</a>
+        </footer>
+      </article>
+
+      <article class="post-card post tag-time-complexity tag-algorithm tag-hash-map no-image">
+    <div class="post-card-content">
+        <a class="post-card-content-link" href="/time-complexity-of-hash-table/">
+            <header class="post-card-header">
+                    <span class="post-card-tags">Time Complexity</span>
+                <h2 class="post_card_title">Time and Space Complexity of Hash Table operations</h2>
+            </header>
+            <section class="post_card_excerpt">
+                <p>This article covers Time and Space Complexity of Hash Table (also known as Hash Map) operations for different operations like search, insert and delete for two variants of Hash Table that is Open and Closed Addressing.</p>
+            </section>
+        </a>
+        <footer class="post-card-meta">
+                <img class="author-profile-image" src="/content/images/2021/08/Screenshot_20201018-171550.png" alt="J. Varun Iyer" />
+            <span class="post-card-author"><a href="/author/iyerjvarun/">J. Varun Iyer</a></span>
+        </footer>
+    </div>
+</article>
+
+      <article class="post-card post tag-algorithm tag-data-structure tag-heap no-image">
+    <div class="post-card-content">
+        <a class="post-card-content-link" href="/create-heap-from-array/">
+            <header class="post-card-header">
+                    <span class="post-card-tags">Algorithms</span>
+                <h2 class="post_card_title">Create a Heap from Array of N integers</h2>
+            </header>
+            <section class="post_card_excerpt">
+                <p>In this post, we discuss the heap data structure and how to create a min and max heap from N given integers in form of an Array. Similarly, inserting elements one by one take O(N logN) time but the optimal approach takes O(N) time.</p>
+            </section>
+        </a>
+        <footer class="post-card-meta">
+                <img class="author-profile-image" src="/content/images/2021/11/erick.jpg" alt="Erick Lumunge" />
+            <span class="post-card-author"><a href="/author/erick/">Erick Lumunge</a></span>
+        </footer>
+    </div>
+</article>
+
+    </div>
+  </div>
+
+</aside>
+
+
+<style>
+.searchbar {
+height: 36px;
+margin-bottom: 1em;
+margin-top: 1em;
+margin-right: 1.5em;
+}
+.searchbartext {
+height: 33px;
+font-size:  17px;
+padding-left: 4%;
+mix-blend-mode: normal;
+border: 2px solid rgb(163, 163, 163);
+background-color: #ccc;
+color: #ffffff;
+box-sizing: border-box;
+backdrop-filter: blur(4px);
+border-radius: 10px;
+} 
+input:active {
+border: none;
+}
+::placeholder{
+    color: #ffffff;
+}
+.btn-default{
+position: absolute;
+color: rgb(255, 255, 255);
+margin-left: 4.1em;
+margin-top: -1.9em;
+background: transparent;
+width: 32px;
+height: 31px;
+}
+@media screen and (max-width: 417px){
+.btn-default{
+  margin-left: 10%;
+ }
+.searchbartext {
+  width: 125%;
+ }
+}
+@media screen and (max-width: 350px){
+  .btn-default{
+  margin-left: 5%;
+ }
+ </style>
+<div class="floating-header">
+    <div class="floating-header-logo">
+        <a href="https://iq.opengenus.org">
+                <img src="/content/images/2018/02/sq_logo.png" alt="OpenGenus IQ: Computing Expertise &amp; Legacy icon" />
+            <span>OpenGenus IQ: Computing Expertise &amp; Legacy</span>
+        </a>
+    </div>
+    <span class="floating-header-divider">&mdash;</span>
+    <div class="floating-header-title">Delaunay Triangulation</div>
+
+    <center>
+<form class="searchbar" role="search" method="get">
+  <input
+     autocomplete="off"
+     name="q"
+     placeholder="Search ..."
+    title="search here"
+    type="text"
+    id="name11"
+    onclick="openmodal();"
+ class="searchbartext"
+/>
+<button type="submit" disabled class="btn-default">
+&#x1F50D;
+</button>
+</form>
+</center>
+    <div class="floating-header-share">
+
+        <div class="floating-header-share-label">Share this <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24">
+    <path d="M7.5 15.5V4a1.5 1.5 0 1 1 3 0v4.5h2a1 1 0 0 1 1 1h2a1 1 0 0 1 1 1H18a1.5 1.5 0 0 1 1.5 1.5v3.099c0 .929-.13 1.854-.385 2.748L17.5 23.5h-9c-1.5-2-5.417-8.673-5.417-8.673a1.2 1.2 0 0 1 1.76-1.605L7.5 15.5zm6-6v2m-3-3.5v3.5m6-1v2"/>
+</svg>
+</div>
+            <!-- Twitter-->
+        <a class="floating-header-share-tw" href="https://twitter.com/share?text=You will love this article on Delaunay%20Triangulation&amp;url=https://iq.opengenus.org/delaunay-triangulation/"
+            onclick="window.open(this.href, 'share-twitter', 'width=550,height=235');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M30.063 7.313c-.813 1.125-1.75 2.125-2.875 2.938v.75c0 1.563-.188 3.125-.688 4.625a15.088 15.088 0 0 1-2.063 4.438c-.875 1.438-2 2.688-3.25 3.813a15.015 15.015 0 0 1-4.625 2.563c-1.813.688-3.75 1-5.75 1-3.25 0-6.188-.875-8.875-2.625.438.063.875.125 1.375.125 2.688 0 5.063-.875 7.188-2.5-1.25 0-2.375-.375-3.375-1.125s-1.688-1.688-2.063-2.875c.438.063.813.125 1.125.125.5 0 1-.063 1.5-.25-1.313-.25-2.438-.938-3.313-1.938a5.673 5.673 0 0 1-1.313-3.688v-.063c.813.438 1.688.688 2.625.688a5.228 5.228 0 0 1-1.875-2c-.5-.875-.688-1.813-.688-2.75 0-1.063.25-2.063.75-2.938 1.438 1.75 3.188 3.188 5.25 4.25s4.313 1.688 6.688 1.813a5.579 5.579 0 0 1 1.5-5.438c1.125-1.125 2.5-1.688 4.125-1.688s3.063.625 4.188 1.813a11.48 11.48 0 0 0 3.688-1.375c-.438 1.375-1.313 2.438-2.563 3.188 1.125-.125 2.188-.438 3.313-.875z"/></svg>
+        </a>
+            <!-- Facebook-->
+        <a class="floating-header-share-fb" href="https://www.facebook.com/sharer/sharer.php?u=https://iq.opengenus.org/delaunay-triangulation/"
+            onclick="window.open(this.href, 'share-facebook','width=580,height=296');return false;">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><path d="M19 6h5V0h-5c-3.86 0-7 3.14-7 7v3H8v6h4v16h6V16h5l1-6h-6V7c0-.542.458-1 1-1z"/></svg>
+        </a>
+    </div>
+    <progress class="progress" value="0">
+        <div class="progress-container">
+            <span class="progress-bar"></span>
+        </div>
+    </progress>
+</div>
+
+
+
+
+
+    <footer class="site-footer outer">
+      <div class="site-footer-content inner">
+        <section class="copyright"><a href="https://iq.opengenus.org">OpenGenus IQ</a> &copy; 2022 All rights
+          reserved ™ [email: <a href="mailto:team@opengenus.org">team@opengenus.org</a>]</section>
+        <nav class="site-footer-nav">
+          <a href="https://iq.opengenus.org">Top Posts</a>
+          <a href="https://www.linkedin.com/company/opengenus" target="_blank"
+            rel="noopener">LinkedIn</a>
+          <a href="https://twitter.com/OpenGenus" target="_blank" rel="noopener">Twitter</a>
+        </nav>
+      </div>
+    </footer>
+
+  </div>
+
+  <script src="https://code.jquery.com/jquery-3.2.1.min.js"
+    integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous">
+  </script>
+  <script type="text/javascript" src="/assets/js/jquery.fitvids.js?v=f19783a367"></script>
+
+  <!--
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <script type="text/javascript" src="/assets/js/chatbox.js?v=f19783a367"></script>
+  -->
+
+  <script type="text/javascript" src="/assets/js/tab.js?v=f19783a367"></script>
+  <!-- for syntax highlight -->
+  <script type="text/javascript" src="/assets/js/prism.js?v=f19783a367"></script>
+
+  <!-- for search
+  <script type="text/javascript"
+    src="https://cdnjs.cloudflare.com/ajax/libs/typeahead.js/0.11.1/typeahead.bundle.min.js"></script>
+  -->
+
+  <script>
+// ===== Scroll to Top ====
+ $(window).scroll(function() {
+    if ($(this).scrollTop() >= 50) {        // If page is scrolled more than 50px
+        $('#scrollBtn').fadeIn(500);    // Fade in the arrow
+    } else {
+        $('#scrollBtn').fadeOut(500);   // Else fade out the arrow
+    }
+});
+$('#scrollBtn').click(function() {      // When arrow is clicked
+    $('body,html').animate({
+        scrollTop : 0                       // Scroll to top of body
+    }, 500);
+});
+
+  </script>
+
+
+  <script type="text/javascript" src="/assets/js/lightbox/lightbox.js?v=f19783a367"></script>
+<script>
+
+  // NOTE: Scroll performance is poor in Safari
+  // - this appears to be due to the events firing much more slowly in Safari.
+  //   Dropping the scroll event and using only a raf loop results in smoother
+  //   scrolling but continuous processing even when not scrolling
+  $(document).ready(function () {
+    // Start fitVids
+    var $postContent = $(".post-full-content");
+    $postContent.fitVids();
+    // End fitVids
+
+    var progressBar = document.querySelector('progress');
+    var header = document.querySelector('.floating-header');
+    var title = document.querySelector('.post-full-title');
+
+    var lastScrollY = window.scrollY;
+    var lastWindowHeight = window.innerHeight;
+    var lastDocumentHeight = $(document).height();
+    var ticking = false;
+
+    function onScroll() {
+      lastScrollY = window.scrollY;
+      requestTick();
+    }
+
+    function onResize() {
+      lastWindowHeight = window.innerHeight;
+      lastDocumentHeight = $(document).height();
+      requestTick();
+    }
+
+    function requestTick() {
+      if (!ticking) {
+        requestAnimationFrame(update);
+      }
+      ticking = true;
+    }
+
+    function update() {
+      var trigger = title.getBoundingClientRect().top + window.scrollY;
+      var triggerOffset = title.offsetHeight + 35;
+      var progressMax = lastDocumentHeight - lastWindowHeight;
+
+      // show/hide floating header
+      if (lastScrollY >= trigger + triggerOffset) {
+        header.classList.add('floating-active');
+      } else {
+        header.classList.remove('floating-active');
+      }
+
+      progressBar.setAttribute('max', progressMax);
+      progressBar.setAttribute('value', lastScrollY);
+
+      ticking = false;
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onResize, false);
+
+    update();
+  });
+</script>
+
+<!--
+<script type="text/javascript">
+  DiscourseEmbed = {
+    discourseUrl: 'https://discourse.opengenus.org/',
+    discourseEmbedUrl: 'http://iq.opengenus.org/delaunay-triangulation/'
+  };
+
+  (function () {
+    var d = document.createElement('script'); d.type = 'text/javascript'; d.async = true;
+    d.src = DiscourseEmbed.discourseUrl + 'javascripts/embed.js';
+    (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(d);
+  })();
+</script>
+-->
+
+<script DOCTYPE="text/javascript">
+
+  //in-page links and table of contents
+  $('.in_page_link').click(function () {
+    event.preventDefault()
+
+    //scroll to the href of the link
+    $('html, body').animate({
+      scrollTop: $($(this).attr('href')).offset().top
+    }, 500);
+    return false;
+
+  });
+
+  $(document).ready(function () {
+
+    var taglist_height = $('#taglist').height();
+    var tag_height = $('#tag_element').height();
+    var q_message = document.createElement('h6');
+
+
+    if (taglist_height >= 35) {
+      $("#more").show();
+    }
+
+    $('#more').click(function () {
+
+      $('#text').removeClass("less");
+      $("#less").show();
+      $(this).hide();
+    });
+
+    $('#less').click(function () {
+      $('#text').addClass("less");
+      $(this).hide();
+      $("#more").show();
+    });
+
+    //Add icon and colors to question answers
+    //click function will be shown if the question is answered correctly
+    $('.correct_option').click(function () {
+
+      var icon_check = '<i class="fa fa-check fadeMe" style="margin:5px;color:#33cc33;"></i>';
+      var icon_cross = '<i class="fa fa-times fadeMe" style="margin:5px;"></i>';
+
+      if ($(this).children().length < 1) {
+        $(this).siblings().children().remove();
+        $(this).siblings().prepend(icon_cross);
+        $(this).siblings().css({ "color": "coral", "border-color": "coral" });
+
+
+        $(this).addClass("correct_answer");
+        $(this).prepend(icon_check);
+        q_message.innerHTML = ("Well done, you are the best.");
+        q_message.classList.add("question_message");
+        q_message.style.color = "MediumSeaGreen";
+        $(this).parents(':eq(0)').prepend(q_message);
+
+        // Show the answer explanation
+
+        if ($(this).parent().siblings(".Answer_explanation").length >= 1) {
+          $(this).parent().siblings(".Answer_explanation").css({ "display": "block" });
+
+        }
+
+      }
+      $(this).attr('disabled', 'disabled');
+    });
+
+
+    //click function will   show the message if the question is answered incorrectly
+
+    $('.wrong_option').click(function () {
+      var icon = '<i class="fa fa-times fadeMe" style="margin:5px;"></i>';
+
+      if ($(this).children().length < 1) {
+        $(this).addClass("wrong_answer");
+
+        $(this).prepend(icon);
+        q_message.innerHTML = ("No worries, this answer is wrong, you must try again");
+        q_message.classList.add("question_message");
+        q_message.style.color = "coral";
+        $(this).parents(':eq(0)').prepend(q_message);
+      }
+
+    });
+
+  })
+
+  //shuffle question
+  function shuffle(arra1) {
+    var ctr = arra1.length, temp, index;
+
+    // While there are elements in the array
+    while (ctr > 0) {
+      // Pick a random index
+
+      index = Math.floor(Math.random() * ctr);
+      // Decrease ctr by 1
+      ctr--;
+      // And swap the last element with it
+
+      temp = arra1[ctr];
+      arra1[ctr] = arra1[index];
+      arra1[index] = temp;
+    }
+    return arra1;
+  }
+
+  //get the options
+  var questions = document.getElementsByClassName("questionlist");
+
+  // shuffle the elements , and remove options if they are more than 4
+  for (c = 0; c <= questions.length; c++) {
+
+    if(questions[c] === undefined)
+      break;
+
+    var index;
+    var ctr2 = questions[c].children.length;
+    var index;
+
+    while (ctr2 > 4) {
+      index = Math.floor(Math.random() * ctr2);
+      if (index != 0) {
+        questions[c].children[index].remove();
+
+        ctr2--;
+      }
+    }
+
+    var myArray = [1, 2, 3, 4];
+
+    shuffle(myArray);
+
+    for (i = 0; i <= 3; i++) {
+      questions[c].children[i].style.order = myArray[i];
+      questions[c].children[i].style.display = "block";
+    }
+  }
+
+</script>
+
+<style>
+a#referencelink {
+   display: block; 
+   cursor:pointer; 
+   background:rgb(181, 222, 250); 
+   padding-top:20px; 
+   padding-bottom:20px; 
+   width:100%; 
+   text-align:center; 
+   font-size: 20px; 
+   color: black;
+}
+</style>
+
+
+
+  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-113523348-1"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'UA-113523348-1');
+</script>
+
+<script type="text/javascript">
+var parent = document.querySelector(".kg-card-markdown p:nth-of-type(5)");
+
+if(parent)
+	parent.insertAdjacentHTML('afterend', '<!-- in between content (post+page) --> <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-6329206778297580" data-ad-slot="4297062681" data-ad-format="auto" data-full-width-responsive="true"></ins> <script> (adsbygoogle = window.adsbygoogle || []).push({}); <\/script>');
+</script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/highlight.min.js"></script>
+<script>hljs.initHighlightingOnLoad();</script> <script type="text/javascript" async src="//cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-MML-AM_CHTML">
+MathJax.Hub.Config({
+    tex2jax: {
+        inlineMath: [["$", "$"], ["\\(", "\\)"]],
+        processEscapes: true
+    }
+});
+</script>
+</body>
+</html>
