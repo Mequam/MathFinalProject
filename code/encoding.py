@@ -64,11 +64,10 @@ class Triangle(Loop):
 		if len(points) != 3:
 			raise Exception("Triangles have 3 points dum dum")
 		super().__init__(points,t)
-		
-		
-		
-		
-#Things That will make project go boom and well hopefully		
+			
+#This class was found online thanks to a lovely human bieng
+#it serves as a test to ensure that we are getting valid delaunay
+#triangulations
 class Delaunay2D:
     """Class to compute a Delaunay triangulation in 2D
     ref: http://en.wikipedia.org/wiki/Bowyer-Watson_algorithm
@@ -91,9 +90,9 @@ class Delaunay2D:
         self.circles = {}
 
         # Create two  triangles for the frame just as a starter 
-        T1 = (0, 1, 3)
+        T1 = (0, 1, 3) #these reference the points in the self.cords array
         T2 = (2, 3, 1)
-        self.triangles[T1] = [T2, None, None]
+        self.triangles[T1] = [T2, None, None] #references boardering triangles
         self.triangles[T2] = [T1, None, None]
 
         # Compute circumcenters for each triangle located within our frame
@@ -127,7 +126,8 @@ class Delaunay2D:
 
 
     def addPoint(self, p):
-        """Will add a point to our current triangulation, and ensure it maintains delaunay triangulation using Bowyer-Watson algorithm."""
+        """Will add a point to our current triangulation, and ensure it maintains 
+	delaunay triangulation using Bowyer-Watson algorithm."""
         p = np.asarray(p)   #takes our entered point and makes it an array
         idx = len(self.coords)  #our index is the length of our coordinates arry
         self.coords.append(p)  #append our entered point to our coordinates
@@ -146,10 +146,13 @@ class Delaunay2D:
         # get the opposite triangle of this edge
         while True:
             # Check if edge of triangle T is on the boundary or if opposite triangle of this edge is external to the list
-            oppositeTriangle = self.triangles[T][edge] #set the oposite triangle of our chosen T and its edge connected to it
+            #set the oposite triangle of our chosen T and its edge connected to it 	
+            oppositeTriangle = self.triangles[T][edge] 
             if oppositeTriangle not in deleteableTriangles: #if our opposite triangle is a bad triangle then insert that edge and triangle into our boundry array to search for bad triangels
                 # Insert edge and external triangle into boundary list
-                boundary.append((T[(edge+1) % 3], T[(edge-1) % 3], oppositeTriangle))
+                
+		#the edge is encoded as two points referenceing the chord array
+		boundary.append((T[(edge+1) % 3], T[(edge-1) % 3], oppositeTriangle))
 
                 # Move to next edge in the current triangle
                 edge = (edge + 1) % 3
