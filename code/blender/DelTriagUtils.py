@@ -1,15 +1,22 @@
 #this file contains utilities for performing Deaulany Triangulation
 #on a set of points
-
 import numpy as np
 
 #returns the radius and then point 
 #of a circumcenter
 def circumCenter(pa,pb,pc):
-	v3 = ((pa+pb)/2)
+	badn1 = (pb-pa)
+	badn2 = (pc-pa)
+		
+	n1 = np.array([-badn1[1],badn1[0]])
+	n2 = np.array([-badn2[1],badn2[0]])
+
+	v1 = ((pa+pb)/2)
 	v2 = ((pa+pc)/2)
-	vmat = np.hstack((v3,v2))
-	print(vmat)
+	
+	center = colParam(n1,v1,n2,v2)[0]*n1+v1
+	return (center,np.linalg.norm(center - pa))
+
 
 #returns the parametric time of line
 #collision between two lines represented 
