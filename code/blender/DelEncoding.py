@@ -1,4 +1,5 @@
 #This file contains the data structures used in delauny triangulation
+import numpy as np
 import DelTriagUtils as du
 
 class Triangulation:
@@ -12,8 +13,43 @@ class Triangulation:
 	#adds a new point to the triangulation
 	def add_point(self,point):
 		pass
+	
+	def pointFightDecorator(comparison):
+		def most_compared(self):	
+			if len(self.points) == 0:
+				return None
+			most = self.points[0]
+			for p in self.points:
+				if comparison([0],most):
+					left_most = p
+		return most_compared
+	
+	@pointFightDecorator
+	def left_most_point(p1,most):
+		return p1[0] < most[0]
+	@pointFightDecorator
+	def right_most_point(p1,most):
+		return p1[0] > most[0]
+	
+	@pointFightDecorator
+	def top_most_point(p1,most):
+		return p1[1] > most[1]
+	
+	@pointFightDecorator
+	def bottom_most_point(p1,most):
+		return p1[1] < most[1]
+
+			
+	
 class DelTriangulation(Triangulation):
 	def __init__(self,points):
+		#these are points that we use to ensure we
+		#have a poper triangulation to start with
+		self.ghostPoints = [np.array([1,0]),
+			np.array([0,1]),
+			np.array([-1,0])]	
+
+		
 		#an array of circomcircles
 		#takes a triangle (tuple
 		# of point idx) and returns
@@ -39,7 +75,15 @@ class DelTriangulation(Triangulation):
 	def remove_triangle(self,t):
 		del self.triangles[t]
 		del self.circles[t]
-			
+	
+	def remove_triangle_reference(self,t):
+		self.remove_triangle(t)
+		
+		#remove any reference to the triangle
+		for tl in self.triangles:
+			for j in range(0,3):
+				if t == self.triangles[tl][j]:
+					self.triangles[tl][j] = None
 	#takes a subset of CONNECTED triangles
 	def get_boundry(self,innerTriangles):
 		ret_val = []
@@ -69,6 +113,52 @@ class DelTriangulation(Triangulation):
 	#returns true if the point is in the given circle
 	def in_circle(self,point,t):
 		return du.inCircle(point,self.get_circum_circle(t))
+	#clears all data
+	def clear_data():
+		self.triangles = {}
+		self.circles = {}
+		self.points = []
+	#only clears triangulated data
+	def clear_triangulation():
+		self.triangles = {}
+		self.circles = {}
+	#hail mary that resets and re-triangulates the whole mesh
+	def triangulate_self(self,points,safty_offset = 256):
+		
+		self.clear_data()
+	
+		#specifically copy over a reference of the elements in the gp array
+		#not just the array itself	
+		for g in self.ghostPoints:
+			self.points.append(g)
+		
+		lm = self.left_most_point()
+		rm = self.right_most_point()
+		tm = self.top_most_point()
+		bm = self.bottom_most_point()
+	
+		#make the ghost points cover the entire 	
+		ghostPoints[0] = (rm[0] + safty_offset ,bm[1] - safty_offset)
+		ghostPoints[1] = (lm[0] - safty_offset, bm[1] - safty_offset)
+		ghostPoinst[2] = ((rm[0]+lm[0])/2,tm[1] + safty_offset)
+	
+		self.triangles[(0,1,2)] = [None,None,None]
+		self.circles[(0,1,2)] = self.get_circum_circle((0,1,2))
+		
+		#add all of the points to the mesh
+		for point in points:
+			self.add_point(point)
+		
+		#remove the ghost triangle any connections relating to it
+		#its circles AND its triangle
+		for t in self.triangles:
+			for j in range(0,3):
+				if t[j] in [0,1,2]:
+					#PURGE THE EVIL TRIANGLE *^*
+					self.remove_triangle_reference(t)
+		
+		for i in range(0,len(ghostPoinst)):
+			self.points.remove(0)
 
 	#adds a point to an existing delany triangulation
 	#while maintaining the current configuration
