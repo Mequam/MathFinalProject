@@ -2,6 +2,12 @@
 #on a set of points
 import numpy as np
 
+def inCircle(p,circle,give = 0.1):
+	(center,radius) = circle
+	print("distance: " + str(np.linalg.norm(center - p) - give ))
+	print("radius: " + str(radius))
+	return np.linalg.norm(center - p) - give < radius
+
 #returns the radius and then point 
 #of a circumcenter
 def circumCenter(pa,pb,pc):
