@@ -1,4 +1,4 @@
-#This file contains the data structures used in delauny triangulation
+	#This file contains the data structures used in delauny triangulation
 import numpy as np
 import DelTriagUtils as du
 
@@ -124,7 +124,11 @@ class DelTriangulation(Triangulation):
 			for j in range(0,3):
 				if t == self.triangles[tl][j]:
 					self.triangles[tl][j] = None
-		
+	def print_adj(self):
+		print('adjacency')
+		for i in self.triangles:
+			print('\t',i,self.triangles[i])	
+	
 	#takes a subset of CONNECTED triangles
 	def get_boundry(self,innerTriangles):
 		print('entering boundry code')
@@ -140,23 +144,24 @@ class DelTriangulation(Triangulation):
 		while True:
 			print(ret_val)
 			adjacentTriangle = self.triangles[focusTriangle][focusEdge]
+			
 			#we have found a triangle outside of the given set
 			#store the border edge and triangle
 			if adjacentTriangle and adjacentTriangle in innerTriangles:
 				focusEdge = (self.triangles[
 						adjacentTriangle].index(
 							focusTriangle) + 1) % 3
-				focusTriangle = adjacentTriangle	
+				focusTriangle = adjacentTriangle
+				input(('(ENTER)> '))
 			else:
 				ret_val.append([focusTriangle[(focusEdge - 1) % 3],
 						focusTriangle[(focusEdge + 1) % 3],
 						adjacentTriangle])
 				
 				focusEdge = (focusEdge + 1) % 3
-			
-				if len(ret_val) >= 3 and ((ret_val[0][1] == ret_val[-1][0] and ret_val[0][0] == ret_val[-1][1]) or (ret_val[0][0] == ret_val[-1][0] and ret_val[0][1] == ret_val[-1][1])):
-					break
-			#input('(ENTER)> ')
+				input('(ENTER)> ')		
+				if ret_val[0][1] == ret_val[-1][0]:
+					break	
 		print('leaving boundry')
 		return ret_val
 	#returns true if the point is in the given circle
@@ -164,6 +169,7 @@ class DelTriangulation(Triangulation):
 		return du.inCircle(point,self.get_circum_circle(t))
 	#clears all data
 	def clear_data(self):
+		self.ghostPoints = []
 		self.triangles = {}
 		self.circles = {}
 		self.points = []
@@ -171,6 +177,9 @@ class DelTriangulation(Triangulation):
 	def clear_triangulation(self):
 		self.triangles = {}
 		self.circles = {}
+	def get_bounding_triangle_box(self,points,offset=20):
+		points = self.get_bounding_box(points,offset)
+		return [(points[0],points[1],points[3]),(points[2],poins[1],points[3])]
 	#hail mary that resets and re-triangulates the whole mesh
 	def triangulate_self(self,points,safty_offset = 10):
 		
@@ -184,32 +193,35 @@ class DelTriangulation(Triangulation):
 		boundingTriangle = self.get_bounding_triangle(points,safty_offset)
 		#make the ghost points cover the entire 	
 		
-		self.ghostPoints[0] = boundingTriangle[0]
-		self.ghostPoints[1] = boundingTriangle[1]
-		self.ghostPoints[2] = boundingTriangle[2]
+		box_points = self.get_bounding_box(points,safty_offset)
 		
-		print('displaying ghost points')
-		print('- '*10)
-		for g in self.ghostPoints:
-			print(g)
-		print('- '*10)
-
-		#specifically copy over a reference of the elements in the gp array
-		#not just the array itself	
-		for g in self.ghostPoints:
-			self.points.append(g)
+		#[(points[0],points[1],points[3]),(points[2],poins[1],points[3])]
+		for i in range(0,len(box_points)):
+			print('displaying ghost points')
+			print('- '*10)
 		
-		# # print("points ")
-		for i in self.points:
-			print(i)
+			self.ghostPoints.append(box_points[i])
+			self.points.append(box_points[i])
 
-		self.add_triangle((0,1,2),[None,None,None])
+			print('- '*10)	
+		
+		t1 = (0,3,1)
+		t2 = (2,0,3)
+		
+		self.triangles[t1] = [t2,None,None]
+		self.triangles[t2] = [t1,None,None]
+		self.circles[t1] = self.get_circum_circle(t1)
+		self.circles[t2] = self.get_circum_circle(t2)	
 		
 		# # print("adding a point")
 		
 		#add all of the points to the mesh
 		for point in points:
+			print('starting add_point')
+			self.print_adj()
 			self.add_point(point)
+			self.print_adj()
+			input('(ending add point)>')
 		
 		#remove the ghost triangle any connections relating to it
 		#its circles AND its triangle
@@ -243,7 +255,8 @@ class DelTriangulation(Triangulation):
 			if self.in_circle(point,t):
 				badTriangles.append(t)
 		badBoundry = self.get_boundry(badTriangles)
-		
+			
+		print('boundry \n',badBoundry)	
 		newTriangles = []
 		
 		#the number of points we have is the new index for
@@ -270,7 +283,7 @@ class DelTriangulation(Triangulation):
 				boundryBorder = self.triangles[boundryTriangle]
 				
 				for i in range(0,len(boundryBorder)):
-					if boundryBorder[i] and edge_point1 in boundryBorder[i] and edge_point0 in boundryBorder[i]:
+					if boundryBorder[i] != focusTriangle and boundryBorder[i] and edge_point1 in boundryBorder[i] and edge_point0 in boundryBorder[i]:
 						boundryBorder[i] = focusTriangle
 				
 		new_tri_len = len(new_triangles)
