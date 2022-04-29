@@ -23,6 +23,10 @@ def circumCenter(pa,pb,pc):
 	center = colParam(n1,v1,n2,v2)[0]*n1+v1
 	return (center,np.linalg.norm(center - pa))
 
+#returns the point where parametric lines collide
+def colPoint(n1,v1,n2,v2):
+	(t1,t2) = colParam(n1,v1,n2,v2)
+	return n1*t1 + v1
 
 #returns the parametric time of line
 #collision between two lines represented 

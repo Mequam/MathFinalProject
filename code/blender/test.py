@@ -75,7 +75,15 @@ def do_the_thing():
 	# delTriag.add_point(np.array([0.33,-0.2]))
 	# delTriag.add_point(np.array([0.00,0.9]))
 
-	delTriag.triangulate_self([np.array([-0.5,0.5]),np.array([0.5,-0.5]),np.array([0.7,-0.9])])
+	delTriag.triangulate_self([
+		np.array([1.4330127239227295, 0.7548534870147705]),
+		np.array([-0.5669872760772705, 0.7548534870147705]),
+		np.array([1.4330127239227295, -1.2451465129852295]),
+		np.array([-0.5669872760772705, -1.2451465129852295]),
+		np.array([-0.00410810112953186, -0.07194764912128448]),
+		np.array([0.7794103622436523, -0.49257344007492065]),
+		np.array([-0.00879889726638794, -0.6066076755523682])
+	])
 
 	return delTriag
 
