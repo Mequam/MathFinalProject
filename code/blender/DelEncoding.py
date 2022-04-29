@@ -44,7 +44,9 @@ class DelTriangulation(Triangulation):
 	def get_boundry(self,innerTriangles):
 		ret_val = []
 		focusTriangle = innerTriangles[0]
+		
 		focusEdge = 0	
+		
 		while True:	
 			adjacentTriangle = self.triangles[focusTriangle][focusEdge]
 			#we have found a triangle outside of the given set
@@ -83,6 +85,11 @@ class DelTriangulation(Triangulation):
 		#the target point
 		idx = len(self.points)
 		
+		self.points.append(point)
+		#evil triangles go to del >:[
+		for evilTriangle in badTriangles:
+			self.remove_triangle(evilTriangle)
+
 		new_triangles = []
 		for (edge_point0,edge_point1,boundryTriangle) in badBoundry:
 			
@@ -107,3 +114,9 @@ class DelTriangulation(Triangulation):
 		for i in range(0,new_tri_len):
 			self.triangles[new_triangles[i]][1] = new_triangles[(i - 1) % new_tri_len]
 			self.triangles[new_triangles[i]][2] = new_triangles[(i + 1) % new_tri_len]
+			self.circles[new_triangles[i]] = self.get_circum_circle(new_triangles[i])
+		print("new triangles")
+		for tri in new_triangles:
+			print(tri)
+			for adj in self.triangles[tri]:
+				print('\t',adj)
