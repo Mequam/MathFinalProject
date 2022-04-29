@@ -1,3 +1,4 @@
+from xml.etree.ElementTree import ProcessingInstruction
 import numpy as np
 import DelTriagUtils as du
 import DelEncoding as de
@@ -38,8 +39,8 @@ def do_the_thing():
 
 	delTriag = de.DelTriangulation([p*1 for p in testPointSet])
 
-	delTriag.add_triangle(tri1,[tri2,None,None])
-	delTriag.add_triangle(tri2,[tri1,None,None])
+	#delTriag.add_triangle(tri1,[tri2,None,None])
+	#delTriag.add_triangle(tri2,[tri1,None,None])
 	# print("circumcircle")
 	# # print(delTriag.get_circum_circle((0,1,2)))	
 	# print('- '*10)
@@ -68,13 +69,17 @@ def do_the_thing():
 	# print("testing add point")
 	
 	# delTriag.add_point(np.array([0,0]))
-	delTriag.add_point(np.array([-0.5,0.5]))
-	delTriag.add_point(np.array([0.5,-0.5]))
-	delTriag.add_point(np.array([0.7,-0.9]))
+	#delTriag.add_point(np.array([-0.5,0.5]))
+	#delTriag.add_point(np.array([0.5,-0.5]))
+	#delTriag.add_point(np.array([0.7,-0.9]))
 	# delTriag.add_point(np.array([0.33,-0.2]))
 	# delTriag.add_point(np.array([0.00,0.9]))
+
+	delTriag.triangulate_self([np.array([-0.5,0.5]),np.array([0.5,-0.5]),np.array([0.7,-0.9])])
+
 	return delTriag
 
 
 if __name__ == '__main__':
 	do_the_thing()
+

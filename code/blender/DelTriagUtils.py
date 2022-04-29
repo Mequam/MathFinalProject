@@ -4,8 +4,8 @@ import numpy as np
 
 def inCircle(p,circle,give = 0.1):
 	(center,radius) = circle
-	print("distance: " + str(np.linalg.norm(center - p) - give ))
-	print("radius: " + str(radius))
+	# print("distance: " + str(np.linalg.norm(center - p) - give ))
+	# print("radius: " + str(radius))
 	return np.linalg.norm(center - p) - give < radius
 
 #returns the radius and then point 
@@ -35,6 +35,10 @@ def colParam(n1,v1,n2,v2):
 	col_n1 = n1.reshape(-1,1)
 	col_n2 = n2.reshape(-1,1)
 	
+	# print("\n\ntest print ughghadjdjdjdjdfjdf\n")
+	# print(n1, v1, n2, v2)
+	# print(col_n1)
+	# print("\n\n")
 	return np.transpose(
 		np.linalg.solve(np.hstack((col_n1,
 					-col_n2)),
