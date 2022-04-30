@@ -5,6 +5,15 @@ discreate math structures
 
 Specifically relating to delaunay triangulation
 
+
+---
+
+## Group Members
+
+Brendan Breuss
+Zack Maddox
+David Kennamer
+
 ---
 
 ## Quick Links
